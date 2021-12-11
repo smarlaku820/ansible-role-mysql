@@ -16,7 +16,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - ansible-role-mysql
+         - ansible_role_mysql
 
 License
 -------
