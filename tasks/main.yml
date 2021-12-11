@@ -1,0 +1,47 @@
+---
+# tasks file for mysql_db
+  
+  - name: Download the mysql package
+    get_url: 
+      url: https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+      dest: "/home/{{ ansible_env.USER }}/mysql-apt-config_0.8.13-1_all.deb"
+    become: yes
+  
+  - name: Install the mysql package
+    apt: 
+      deb: "/home/{{ ansible_env.USER }}/mysql-apt-config_0.8.13-1_all.deb"
+    become: yes
+  
+  - name: Run apt-update
+    command: apt update
+    become: yes
+
+  - name: Install the MySql database
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - mysql-server
+    - mysql-client
+    become: yes
+  
+  - name: Start the MySql database
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+    become: yes
+    
+  - name: Create Application database
+    mysql_db: 
+      name: "{{ db_name }}"
+      state: present
+    become: yes
+
+  - name: Create Application User
+    mysql_user:
+      name: "{{ db_user_name }}"
+      password: "{{ db_user_password }}"
+      priv: '*.*:ALL'
+      state: present
+    become: yes
